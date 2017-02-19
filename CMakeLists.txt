@@ -33,7 +33,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 
 if (APPLE)
-    set(APP_NAME "OpenGLBoilerplate")
+    set(APP_NAME "GLParticles")
 
     if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/icon.icns)
         add_executable(${APP_NAME} MACOSX_BUNDLE main.cpp icon.icns)
@@ -49,9 +49,9 @@ if (APPLE)
     set_target_properties(${APP_NAME} PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME ${APP_NAME})
     set_target_properties(${APP_NAME} PROPERTIES MACOSX_BUNDLE_SHORT_VERSION_STRING "1.0")
     set_target_properties(${APP_NAME} PROPERTIES MACOSX_BUNDLE_LONG_VERSION_STRING "1.0")
-    set_target_properties(${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_STRING "OpenGL boilerplate example app")
+    set_target_properties(${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_STRING "OpenGL particles example")
 else()
-    set(APP_NAME "opengl-boilerplate")
+    set(APP_NAME "gl-particles")
     add_executable(${APP_NAME} main.cpp)
 endif()
 
