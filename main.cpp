@@ -22,6 +22,26 @@ static void key_callback(GLFWwindow *window, int key, int scancode, int action, 
 
 static void render(GLFWwindow *window) {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+    // Get camera specifics
+    // TODO
+
+    // Draw skybox
+    // nice-to-have TODO
+
+    // Draw ground
+    // TODO
+
+    // Draw pixels
+    // TODO
+}
+
+static void logic() {
+    // Move Camera based on held buttons
+    // TODO
+
+    // Move Particles based on player position and their velocities
+    // TODO
 }
 
 int main(void) {
@@ -46,6 +66,7 @@ int main(void) {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     glfwWindowHint(GLFW_SAMPLES, 0);
     glfwWindowHint(GLFW_RED_BITS, 8);
     glfwWindowHint(GLFW_GREEN_BITS, 8);
@@ -86,9 +107,12 @@ int main(void) {
     glfwSetKeyCallback(window, key_callback);
     // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+    // This should throttle our updates to 60fps
+    // Lets hope the comp can keep up LOL
     glfwSwapInterval(1);
 
     // Render only the front face of geometry.
+    // TODO reenable this after other renderings work
     // glEnable(GL_CULL_FACE);
     // glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
@@ -103,14 +127,27 @@ int main(void) {
     glClearDepth(1.0f);
     glClearColor(0.3, 0.5, 0.7, 1.0);
 
+    // Set up objects
+    // TODO initialize camera
+    // TODO initialize ground
+    // nice-to-have TODO initialize skybox
+    // TODO initialize particles
+
     while (!glfwWindowShouldClose(window)) {
+        // React to events
         glfwPollEvents();
 
-        render(window);
-
         // Update sizes in case of change
+        // Needed because FB can resize when changing monitors
         glfwGetFramebufferSize(window, &internal_width, &internal_height);
-        glfwGetWindowSize(window, &window_width, &window_height);
+        // Not needed because window can't change virtual size
+        // glfwGetWindowSize(window, &window_width, &window_height);
+
+        // Perform calculations based on inputs
+        logic();
+
+        // Draw stuff
+        render(window);
 
         glfwSwapBuffers(window);
     }
