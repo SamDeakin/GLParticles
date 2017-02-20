@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include <GL/glew.h>
+#include <GL/gl3w.h>
 
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -69,27 +69,50 @@ int main(void) {
     // Update internal size
     glfwGetFramebufferSize(window, &internal_width, &internal_height);
     glfwGetWindowSize(window, &window_width, &window_height);
-    cout << internal_width << " x " << internal_height << " window: " << window_width << " x " << window_height << endl;
 
-    glewExperimental = GL_TRUE;
+    int x, y;
+    const GLFWvidmode *video_mode = glfwGetVideoMode(monitor);
+    x = video_mode->width;
+    y = video_mode->height;
+
+    x = (x - window_width) / 2;
+    y = (y - window_height) / 2;
+
+    glfwSetWindowPos(window, x, y);
+
     glfwMakeContextCurrent(window);
-    glewInit();
+    gl3wInit();
 
     glfwSetKeyCallback(window, key_callback);
     // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glfwSwapInterval(1);
 
+    // Render only the front face of geometry.
+    // glEnable(GL_CULL_FACE);
+    // glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+
+    // Setup  some initial OpenGL stuff
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+    glDepthRange(0.0f, 1.0f);
+    glEnable(GL_DEPTH_CLAMP);
+
+    glClearDepth(1.0f);
+    glClearColor(0.3, 0.5, 0.7, 1.0);
+
     while (!glfwWindowShouldClose(window)) {
+        glfwPollEvents();
+
         render(window);
 
-        // Update internal size
+        // Update sizes in case of change
         glfwGetFramebufferSize(window, &internal_width, &internal_height);
         glfwGetWindowSize(window, &window_width, &window_height);
-        cout << internal_width << " x " << internal_height << " window: " << window_width << " x " << window_height << endl;
 
         glfwSwapBuffers(window);
-        glfwPollEvents();
     }
 
     glfwDestroyWindow(window);

@@ -2,12 +2,12 @@
 
 The `external/` folder contains all the external dependencies used, and they are tracked using git submodules. In order to compile the program, you should first clone the repository and then download the dependencies with `git submodule init` and `git submodule update` or just `git submodule update --init`.
 
-## Initializing GLEW
+## Initializing GL3W
 
-Before compiling, you should first generate the `include/` folder for GLFW:
+Before compiling, you should first generate the `include/` folder for GL3W:
 
-    cd external/glew
-    make extensions
+    cd external/gl3w
+    python gl3w_gen.py
 
 ## Build
 
@@ -41,7 +41,7 @@ If you want to use a different version of any dependency tracked as a submodule,
 ## Dependencies
 
  * [GLFW](https://github.com/glfw/glfw)
- * [GLEW](http://github.com/nigels-com/glew.git)
+ * [GL3W](https://github.com/skaslev/gl3w.git)
  * [GLM](https://github.com/g-truc/glm)
  * [CMake](http://www.cmake.org/)
 
