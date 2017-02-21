@@ -2,14 +2,25 @@
 #include <string>
 
 #include <GL/gl3w.h>
-
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+
+#include "camera.hpp"
 
 using namespace glm;
 using namespace std;
 
 #define GLSL(src) #src
+
+Camera *camera;
+
+float fovy = 90;
+int window_width = 1280;
+int window_height = 720;
+int internal_width = 0;
+int internal_height = 0;
+float near = 0.1;
+float far = 100;
 
 static void error_callback(int error, const char *description) {
     fputs(description, stderr);
@@ -20,8 +31,18 @@ static void key_callback(GLFWwindow *window, int key, int scancode, int action, 
         glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
+static void mouse_move_callback(GLFWwindow *window, double xPos, double yPos) {
+    camera->mouseMoved(xPos, yPos);
+}
+
+static void framebuffer_callback(GLFWwindow *window, int width, int height) {
+    internal_width = width;
+    internal_height = height;
+    camera->setPerspectiveMatrix(fovy, internal_width, internal_height, near, far);
+}
+
 static void render(GLFWwindow *window) {
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Get camera specifics
     // TODO
@@ -38,7 +59,7 @@ static void render(GLFWwindow *window) {
 
 static void logic() {
     // Move Camera based on held buttons
-    // TODO
+    camera->logic();
 
     // Move Particles based on player position and their velocities
     // TODO
@@ -47,10 +68,6 @@ static void logic() {
 int main(void) {
     GLFWwindow *window;
     GLFWmonitor *monitor;
-    int window_width = 1280;
-    int window_height = 720;
-    int internal_width = 0;
-    int internal_height = 0;
     string title = "Particles";
 
     glfwSetErrorCallback(error_callback);
@@ -91,6 +108,7 @@ int main(void) {
     glfwGetFramebufferSize(window, &internal_width, &internal_height);
     glfwGetWindowSize(window, &window_width, &window_height);
 
+    // Centre the window
     int x, y;
     const GLFWvidmode *video_mode = glfwGetVideoMode(monitor);
     x = video_mode->width;
@@ -105,7 +123,8 @@ int main(void) {
     gl3wInit();
 
     glfwSetKeyCallback(window, key_callback);
-    // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(window, mouse_move_callback);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // This should throttle our updates to 60fps
     // Lets hope the comp can keep up LOL
@@ -128,7 +147,7 @@ int main(void) {
     glClearColor(0.3, 0.5, 0.7, 1.0);
 
     // Set up objects
-    // TODO initialize camera
+    camera = new Camera(fovy, internal_width, internal_height, near, far);
     // TODO initialize ground
     // nice-to-have TODO initialize skybox
     // TODO initialize particles
@@ -136,12 +155,6 @@ int main(void) {
     while (!glfwWindowShouldClose(window)) {
         // React to events
         glfwPollEvents();
-
-        // Update sizes in case of change
-        // Needed because FB can resize when changing monitors
-        glfwGetFramebufferSize(window, &internal_width, &internal_height);
-        // Not needed because window can't change virtual size
-        // glfwGetWindowSize(window, &window_width, &window_height);
 
         // Perform calculations based on inputs
         logic();
@@ -151,6 +164,8 @@ int main(void) {
 
         glfwSwapBuffers(window);
     }
+
+    delete camera;
 
     glfwDestroyWindow(window);
 

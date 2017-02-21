@@ -23,6 +23,9 @@ add_library(gl3w STATIC
     ${GL3W_SOURCE_DIR}/include
 )
 
+set(SOURCES main.cpp
+            camera.cpp)
+
 if (APPLE)
     set(APP_NAME "GLParticles")
 
@@ -32,7 +35,7 @@ if (APPLE)
         set_target_properties(${APP_NAME} PROPERTIES MACOSX_BUNDLE_ICON_FILE ${CMAKE_CURRENT_SOURCE_DIR}/icon.icns)
     else ()
 
-        add_executable(${APP_NAME} MACOSX_BUNDLE main.cpp)
+        add_executable(${APP_NAME} MACOSX_BUNDLE ${SOURCES})
     endif ()
 
     set_target_properties(${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules/info.plist)
@@ -43,7 +46,7 @@ if (APPLE)
     set_target_properties(${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_STRING "OpenGL particles example")
 else()
     set(APP_NAME "gl-particles")
-    add_executable(${APP_NAME} main.cpp)
+    add_executable(${APP_NAME} ${SOURCES})
 endif()
 
 target_link_libraries(${APP_NAME} glfw ${GLFW_LIBRARIES} gl3w)
