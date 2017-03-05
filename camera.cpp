@@ -27,7 +27,7 @@ glm::mat4 Camera::getPerspectiveMatrix() {
 
 glm::mat4 Camera::getViewMatrix() {
     // Create a view matrix based on the the position followed by the rotation
-    glm::vec3 eye = glm::vec3(x, y, z_offset);
+    glm::vec3 eye = getPlayerPosition();
 
     glm::vec3 centre = glm::vec3(0.0, 1.0, 0.0); // Starting looking position
     centre = glm::rotate(centre, float(rot_vertical), glm::vec3(1.0, 0.0, 0.0));
@@ -35,6 +35,10 @@ glm::mat4 Camera::getViewMatrix() {
     centre = centre + eye;
 
     return glm::lookAt(eye, centre, canonicalUpVector);
+}
+
+glm::vec3 Camera::getPlayerPosition() {
+    return glm::vec3(x, y, z_offset);
 }
 
 void Camera::mouseMoved(double xPos, double yPos) {
