@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.1)
+set (CMAKE_CXX_STANDARD 11)
 
 set(GLFW_SOURCE_DIR "external/glfw")
 set(GLM_SOURCE_DIR "external/glm")
@@ -24,7 +25,9 @@ add_library(gl3w STATIC
 )
 
 set(SOURCES main.cpp
-            camera.cpp)
+            camera.cpp
+            GLShaderProgram.cpp
+            GLError.cpp)
 
 if (APPLE)
     set(APP_NAME "GLParticles")
@@ -49,4 +52,5 @@ else()
     add_executable(${APP_NAME} ${SOURCES})
 endif()
 
+target_compile_definitions(${APP_NAME} PRIVATE DEBUG)
 target_link_libraries(${APP_NAME} glfw ${GLFW_LIBRARIES} gl3w)
